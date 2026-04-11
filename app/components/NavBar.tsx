@@ -16,7 +16,10 @@ export default function NavBar() {
                         <div key={navLink.link} className="relative flex items-center">
                             <Link
                                 href={navLink.link}
-                                className="inline-flex p-2 rounded-md hover:text-amber-500 transition-colors text-rose-300"
+                                className="inline-flex p-2 rounded-md transition-colors"
+                                style={{ color: 'var(--color-pink)' }}
+                                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-gold)'}
+                                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-pink)'}
                                 aria-label={navLink.title}
                             >
                                 <p

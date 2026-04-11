@@ -32,8 +32,8 @@ export default function Page() {
                     {/* Image Placeholder Background */}
                     <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg flex items-center justify-center">
                         <div className="text-center">
-                            <p className="text-white text-4xl font-semibold mb-2">Image {currentImage + 1}</p>
-                            <p className="text-yellow-300 text-xl">{images[currentImage].title}</p>
+                            <p style={{ color: 'var(--text-main)' }} className="text-4xl font-semibold mb-2">Image {currentImage + 1}</p>
+                            <p style={{ color: 'var(--color-gold)' }} className="text-xl">{images[currentImage].title}</p>
                         </div>
                     </div>
                     
@@ -43,7 +43,10 @@ export default function Page() {
                     {/* Left Arrow */}
                     <button
                         onClick={prevImage}
-                        className="absolute left-8 top-1/2 transform -translate-y-1/2 z-20 text-yellow-400 hover:text-yellow-300 transition-colors"
+                        className="absolute left-8 top-1/2 transform -translate-y-1/2 z-20 transition-colors"
+                        style={{ color: 'var(--color-gold)' }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-gold-dark)'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-gold)'}
                         aria-label="Previous image"
                     >
                         <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
@@ -54,7 +57,10 @@ export default function Page() {
                     {/* Right Arrow */}
                     <button
                         onClick={nextImage}
-                        className="absolute right-8 top-1/2 transform -translate-y-1/2 z-20 text-yellow-400 hover:text-yellow-300 transition-colors"
+                        className="absolute right-8 top-1/2 transform -translate-y-1/2 z-20 transition-colors"
+                        style={{ color: 'var(--color-gold)' }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-gold-dark)'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-gold)'}
                         aria-label="Next image"
                     >
                         <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
@@ -68,9 +74,10 @@ export default function Page() {
                             <button
                                 key={index}
                                 onClick={() => setCurrentImage(index)}
-                                className={`w-3 h-3 rounded-full transition-colors ${
-                                    index === currentImage ? "bg-yellow-400" : "bg-black"
-                                }`}
+                                className="w-3 h-3 rounded-full transition-colors"
+                                style={{
+                                    backgroundColor: index === currentImage ? 'var(--color-gold)' : 'var(--bg-primary)'
+                                }}
                                 aria-label={`Go to image ${index + 1}`}
                             />
                         ))}
@@ -80,11 +87,12 @@ export default function Page() {
 
             {/* Content Section */}
             <div className="w-full px-4 md:px-8 py-12">
-                <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-200 to-yellow-300 mb-8">About Us</h1>
-                <p className="text-lg text-white bg-gradient-to-r from-black to-gray-800 p-8 rounded-lg border border-rose-200">
+                <h1 className="text-5xl font-bold mb-8" style={{ color: 'var(--color-gold)' }}>About Us</h1>
+                <p className="text-lg p-8 rounded-lg" style={{ backgroundColor: 'rgba(225, 138, 173, 0.6)', color: 'var(--text-main)', borderColor: 'var(--color-pink)', borderWidth: '1px' }}>
                     longer paragraph description about the program
                 </p>
             </div>
         </>
     );
 }
+
