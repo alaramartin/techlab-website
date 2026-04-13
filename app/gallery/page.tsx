@@ -67,7 +67,10 @@ export default function GalleryPage() {
                 className="w-full px-4 md:px-8 mb-20 relative"
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
+<<<<<<< HEAD
                 onWheel={handleWheel}
+=======
+>>>>>>> origin/main
             >
                 {/* Carousel Container */}
                 <div className="relative overflow-visible rounded-lg">
@@ -77,7 +80,10 @@ export default function GalleryPage() {
                         style={{
                             animation: `scroll-left 30s linear infinite`,
                             animationPlayState: isHovering ? 'paused' : 'running',
+<<<<<<< HEAD
                             transform: `translateX(${scrollOffset}px)`,
+=======
+>>>>>>> origin/main
                             paddingLeft: '80px',
                         }}
                     >
@@ -90,7 +96,11 @@ export default function GalleryPage() {
                                 <div 
                                     className="rounded-lg overflow-hidden border-2 transition-all duration-300 h-full shadow-lg hover:shadow-2xl"
                                     style={{
+<<<<<<< HEAD
                                         backgroundColor: 'var(--bg-card)',
+=======
+                                        backgroundColor: 'rgba(225, 138, 173, 0.6)',
+>>>>>>> origin/main
                                         borderColor: 'var(--color-pink)',
                                     }}
                                     onMouseEnter={(e) => {
