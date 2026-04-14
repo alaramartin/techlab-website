@@ -11,6 +11,7 @@ export default function Page() {
         { id: 3, title: "Program 3" },
         { id: 4, title: "Program 4" },
         { id: 5, title: "Program 5" },
+        { id: 6, title: "Program 6" },
     ];
     
     const nextImage = () => {
