@@ -1,26 +1,31 @@
 "use client";
 import CarouselItem from "./CarouselItem";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
-// note: placeholders. image string will be replaced with link to demo image of picture and will also contain a link to a live demo
-const projects: {
-    image: string;
-    projectName: string;
-    authorName: string;
-}[] = [
-    {
-        image: "image.png",
-        projectName: "my project",
-        authorName: "author name",
-    },
-    {
-        image: "image2.png",
-        projectName: "my other project",
-        authorName: "other author",
-    },
-];
+export type Project = {
+    title: string;
+    author: string;
+    imageUrl: string;
+    description: string;
+};
 
 export default function Carousel() {
+    const [projects, setProjects] = useState<Project[]>([]);
+    useEffect(() => {
+        async function fetchProjects() {
+            const snapshot = await getDocs(collection(db, "projects"));
+            const data: Project[] = snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...(doc.data() as Omit<Project, "id">),
+            }));
+            setProjects(data);
+        }
+
+        fetchProjects();
+    }, []);
+
     const tripled = [...projects, ...projects, ...projects];
     const offsetRef = useRef(0);
     const trackRef = useRef<HTMLDivElement>(null);

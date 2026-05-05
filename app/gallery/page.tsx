@@ -15,7 +15,10 @@ export default function GalleryPage() {
                     </p>
                 </div>
                 <div className="mt-16">
-                    <p>2026 Game Lab</p>
+                    <p>
+                        2026 Game Lab &#40;showing numprojects/12-ish
+                        projects&#41; {/* todo */}
+                    </p>{" "}
                     <div className="flex justify-center w-4/5 overflow-hidden translate-x-1/24">
                         {/* this translate-1/24 number is random and just looked right tbh */}
                         <Carousel />

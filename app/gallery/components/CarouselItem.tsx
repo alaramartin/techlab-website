@@ -1,21 +1,24 @@
 interface CarouselItemProps {
-    image: string;
-    projectName: string;
-    authorName: string;
+    title: string;
+    author: string;
+    imageUrl: string;
+    description: string;
 }
 
 export default function CarouselItem({
-    image,
-    projectName,
-    authorName,
+    title,
+    author,
+    imageUrl,
+    description,
 }: CarouselItemProps) {
     return (
-        <div className="border-2 rounded-2xl border-gray-300 p-4 m-6 hover:scale-115 transition-transform duration-200">
-            <div className="flex border rounded-xl border-gray-300 w-60 h-30 mb-2 justify-center items-center">
-                {image}
+        <div className="border-2 rounded-2xl border-gray-300 p-4 m-6 hover:scale-110 transition-transform duration-200">
+            <div className="flex border rounded-xl border-gray-300 w-75 h-37 mb-2 justify-center items-center overflow-hidden">
+                <img src={imageUrl}></img>
             </div>
-            <p>{projectName}</p>
-            <p className="text-gray-500 text-sm italic">{authorName}</p>
+            <p className="text-md">{title}</p>
+            <p className="text-gray-500 text-sm italic">{author}</p>
+            {description && <p>{description}</p>}
         </div>
     );
 }
