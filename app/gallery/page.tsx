@@ -1,5 +1,5 @@
 import NavBar from "../components/NavBar";
-import Carousel from "./components/Carousel";
+import ProjectDisplays from "./components/ProjectDisplays";
 
 export default function GalleryPage() {
     return (
@@ -15,13 +15,9 @@ export default function GalleryPage() {
                     </p>
                 </div>
                 <div className="mt-16">
-                    <p>
-                        2026 Game Lab &#40;showing numprojects/12-ish
-                        projects&#41; {/* todo */}
-                    </p>{" "}
-                    <div className="flex justify-center w-4/5 overflow-hidden translate-x-1/24">
+                    <div className="flex justify-center w-4/5 overflow-x-hidden translate-x-1/24">
                         {/* this translate-1/24 number is random and just looked right tbh */}
-                        <Carousel />
+                        <ProjectDisplays />
                     </div>
                 </div>
             </div>

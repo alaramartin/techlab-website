@@ -1,31 +1,13 @@
 "use client";
 import CarouselItem from "./CarouselItem";
-import { useState, useEffect, useRef } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { useEffect, useRef } from "react";
+import { Project } from "./ProjectDisplays";
 
-export type Project = {
-    title: string;
-    author: string;
-    imageUrl: string;
-    description: string;
-};
+interface CarouselProps {
+    projects: Project[];
+}
 
-export default function Carousel() {
-    const [projects, setProjects] = useState<Project[]>([]);
-    useEffect(() => {
-        async function fetchProjects() {
-            const snapshot = await getDocs(collection(db, "projects"));
-            const data: Project[] = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...(doc.data() as Omit<Project, "id">),
-            }));
-            setProjects(data);
-        }
-
-        fetchProjects();
-    }, []);
-
+export default function Carousel({ projects }: CarouselProps) {
     const tripled = [...projects, ...projects, ...projects];
     const offsetRef = useRef(0);
     const trackRef = useRef<HTMLDivElement>(null);
@@ -53,18 +35,22 @@ export default function Carousel() {
 
     return (
         <div
-            ref={trackRef}
-            className="flex flex-row will-change-transform items-center"
+            className="w-full overflow-hidden"
             onMouseEnter={() => (hoveredRef.current = true)}
             onMouseLeave={() => (hoveredRef.current = false)}
         >
-            {tripled.map((item, i) => {
-                return (
-                    <div key={i}>
-                        <CarouselItem {...item} />
-                    </div>
-                );
-            })}
+            <div
+                ref={trackRef}
+                className="flex flex-row w-max will-change-transform items-center"
+            >
+                {tripled.map((item, i) => {
+                    return (
+                        <div key={i}>
+                            <CarouselItem {...item} />
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }
