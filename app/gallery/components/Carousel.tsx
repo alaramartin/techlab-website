@@ -1,7 +1,7 @@
 "use client";
 import CarouselItem from "./CarouselItem";
 import { useEffect, useRef } from "react";
-import { Project } from "./ProjectDisplays";
+import { Project } from "@/lib/projects";
 
 interface CarouselProps {
     projects: Project[];
@@ -11,7 +11,6 @@ export default function Carousel({ projects }: CarouselProps) {
     const tripled = [...projects, ...projects, ...projects];
     const offsetRef = useRef(0);
     const trackRef = useRef<HTMLDivElement>(null);
-    // to keep track of the user hovering, to slow down when hover
     const hoveredRef = useRef(false);
 
     useEffect(() => {
@@ -20,7 +19,6 @@ export default function Carousel({ projects }: CarouselProps) {
         const animate = () => {
             offsetRef.current += hoveredRef.current ? 0.5 : 1; // px per frame
 
-            // reset when scrolled through one full set
             const singleSetWidth = trackRef.current!.scrollWidth / 3;
             if (offsetRef.current >= singleSetWidth) {
                 offsetRef.current = 0;
@@ -43,13 +41,9 @@ export default function Carousel({ projects }: CarouselProps) {
                 ref={trackRef}
                 className="flex flex-row w-max will-change-transform items-center"
             >
-                {tripled.map((item, i) => {
-                    return (
-                        <div key={i}>
-                            <CarouselItem {...item} />
-                        </div>
-                    );
-                })}
+                {tripled.map((item, i) => (
+                    <CarouselItem key={i} {...item} />
+                ))}
             </div>
         </div>
     );
