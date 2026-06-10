@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { serif } from "@/app/ui/fonts";
+import { adminFetch } from "@/lib/admin-fetch";
 
 type AdminUser = {
     uid: string;
@@ -30,7 +31,7 @@ export default function AccountsSection() {
 
     async function fetchUsers() {
         setLoading(true);
-        const res = await fetch("/api/admin/users");
+        const res = await adminFetch("/api/admin/users");
         if (res.ok) {
             const data = await res.json();
             setUsers(data.users);
@@ -58,7 +59,7 @@ export default function AccountsSection() {
             cancelEditEmail();
             return;
         }
-        const res = await fetch("/api/admin/users", {
+        const res = await adminFetch("/api/admin/users", {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ uid, email: editingEmail }),
@@ -77,7 +78,7 @@ export default function AccountsSection() {
     async function savePassword(uid: string) {
         setPwdError("");
         if (!newPwd) return;
-        const res = await fetch("/api/admin/users", {
+        const res = await adminFetch("/api/admin/users", {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ uid, password: newPwd }),
@@ -94,7 +95,7 @@ export default function AccountsSection() {
     async function deleteUser(uid: string, email: string) {
         if (!window.confirm(`Delete user "${email}"? This cannot be undone.`))
             return;
-        const res = await fetch("/api/admin/users", {
+        const res = await adminFetch("/api/admin/users", {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ uid }),
@@ -107,7 +108,7 @@ export default function AccountsSection() {
         setCreateStatus("idle");
         setCreateMessage("");
         try {
-            const res = await fetch("/api/admin/users", {
+            const res = await adminFetch("/api/admin/users", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

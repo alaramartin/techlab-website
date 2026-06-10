@@ -1,19 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
+import { getAdminApp, verifyAdminRequest } from "@/lib/firebase-admin";
 
-function getAdminApp() {
-  if (getApps().length > 0) return getApps()[0]!;
-  return initializeApp({
-    credential: cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-    }),
-  });
-}
+const unauthorized = () =>
+    NextResponse.json({ error: "Unauthorized." }, { status: 401 });
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (!(await verifyAdminRequest(req))) return unauthorized();
   try {
     const result = await getAuth(getAdminApp()).listUsers(1000);
     const users = result.users.map((u) => ({
@@ -29,6 +22,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  if (!(await verifyAdminRequest(req))) return unauthorized();
   try {
     const body = await req.json();
     const email = typeof body.email === "string" ? body.email.trim() : "";
@@ -52,6 +46,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  if (!(await verifyAdminRequest(req))) return unauthorized();
   try {
     const body = await req.json();
     const uid = typeof body.uid === "string" ? body.uid : "";
@@ -77,11 +72,19 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const caller = await verifyAdminRequest(req);
+  if (!caller) return unauthorized();
   try {
     const body = await req.json();
     const uid = typeof body.uid === "string" ? body.uid : "";
     if (!uid) {
       return NextResponse.json({ error: "UID is required." }, { status: 400 });
+    }
+    if (uid === caller.uid) {
+      return NextResponse.json(
+        { error: "You can't delete your own account." },
+        { status: 400 }
+      );
     }
     await getAuth(getAdminApp()).deleteUser(uid);
     return NextResponse.json({ success: true });

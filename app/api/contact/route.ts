@@ -5,6 +5,30 @@ const CONTACT_RECIPIENT = "alara.martin@gmail.com";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// One successful submission per IP per window. State is in-memory, so it
+// resets on redeploy and isn't shared across serverless instances — fine as
+// a spam speed bump at this site's scale.
+const RATE_LIMIT_WINDOW_MS = 120_000;
+const lastSubmissionByIp = new Map<string, number>();
+
+function getClientIp(request: Request): string {
+    return (
+        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        "unknown"
+    );
+}
+
+function isRateLimited(ip: string): boolean {
+    const now = Date.now();
+    for (const [key, timestamp] of lastSubmissionByIp) {
+        if (now - timestamp > RATE_LIMIT_WINDOW_MS) {
+            lastSubmissionByIp.delete(key);
+        }
+    }
+    const last = lastSubmissionByIp.get(ip);
+    return last !== undefined && now - last < RATE_LIMIT_WINDOW_MS;
+}
+
 export async function POST(request: Request) {
     let body: { name?: string; email?: string; message?: string };
     try {
@@ -31,6 +55,16 @@ export async function POST(request: Request) {
         return NextResponse.json(
             { error: "Please enter a valid email address." },
             { status: 400 },
+        );
+    }
+
+    const ip = getClientIp(request);
+    if (isRateLimited(ip)) {
+        return NextResponse.json(
+            {
+                error: "You just sent a message — please wait a couple of minutes before sending another.",
+            },
+            { status: 429 },
         );
     }
 
@@ -66,6 +100,10 @@ export async function POST(request: Request) {
             { status: 500 },
         );
     }
+
+    // Only successful sends count against the limit, so a failed attempt
+    // doesn't lock the sender out for the full window.
+    lastSubmissionByIp.set(ip, Date.now());
 
     return NextResponse.json({ ok: true });
 }
