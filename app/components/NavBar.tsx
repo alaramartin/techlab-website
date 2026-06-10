@@ -10,10 +10,10 @@ const navLinks = [
 
 export default function NavBar() {
     return (
-        <nav className="fixed top-0 w-full px-6 md:px-12 h-16 z-50 border-b border-neutral-200 bg-white flex items-center justify-between">
+        <nav className="fixed top-0 w-full px-6 md:px-12 h-16 z-50 border-b border-neutral-200 bg-white/90 backdrop-blur-sm flex items-center justify-between">
             <Link
                 href="/"
-                className={`${serif.className} text-red-900 text-lg whitespace-nowrap`}
+                className={`${serif.className} text-crimson text-lg whitespace-nowrap`}
             >
                 Girls in Tech Lab
             </Link>
@@ -22,7 +22,7 @@ export default function NavBar() {
                     <Link
                         key={navLink.link}
                         href={navLink.link}
-                        className="whitespace-nowrap text-neutral-700 hover:text-red-900 transition-colors duration-200"
+                        className="whitespace-nowrap text-neutral-700 hover:text-crimson transition-colors duration-200"
                     >
                         {navLink.title}
                     </Link>

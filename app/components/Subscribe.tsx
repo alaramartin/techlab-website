@@ -7,8 +7,10 @@ import {
     type FirestoreError,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 
-export default function Subscribe() {
+// `dark` renders the form for the crimson footer; default is for light pages.
+export default function Subscribe({ dark = false }: { dark?: boolean }) {
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [statusMessage, setStatusMessage] = useState("");
@@ -58,39 +60,48 @@ export default function Subscribe() {
     };
 
     return (
-        <form
-            onSubmit={handleSubmit}
-            className="w-full max-w-md border border-neutral-300 bg-white p-8 shadow-sm flex flex-col gap-4"
-        >
-            <p className="text-sm text-neutral-500 font-sans">
-                Get notified about upcoming workshops and events.
-            </p>
-
-            <div className="flex flex-col gap-3">
+        <form onSubmit={handleSubmit} className="w-full max-w-md font-sans">
+            <div
+                className={`flex items-center gap-3 border-b pb-3 transition-colors ${
+                    dark
+                        ? "border-white/40 focus-within:border-white"
+                        : "border-neutral-300 focus-within:border-crimson"
+                }`}
+            >
                 <input
                     type="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     placeholder="your@email.com"
-                    className="border border-neutral-300 px-4 py-2 text-sm font-sans focus:outline-none focus:border-red-900 transition-colors"
+                    className={`flex-1 bg-transparent text-sm focus:outline-none ${
+                        dark
+                            ? "text-white placeholder:text-white/50"
+                            : "text-neutral-900 placeholder:text-neutral-400"
+                    }`}
                     disabled={isSubmitting}
                     required
                 />
-
                 <button
                     type="submit"
-                    className="bg-black text-white text-sm font-sans px-4 py-2 hover:bg-red-900 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                     disabled={isSubmitting}
+                    className={`inline-flex items-center gap-1.5 text-sm whitespace-nowrap transition-all hover:gap-2.5 disabled:opacity-60 disabled:cursor-not-allowed ${
+                        dark ? "text-white" : "text-crimson"
+                    }`}
                 >
-                    {isSubmitting ? "Submitting..." : "Submit"}
+                    {isSubmitting ? "Subscribing..." : "Subscribe"}
+                    <ArrowRightIcon size={15} />
                 </button>
-
-                {statusMessage && (
-                    <p className="text-sm text-neutral-600 font-sans">
-                        {statusMessage}
-                    </p>
-                )}
             </div>
+
+            {statusMessage && (
+                <p
+                    className={`mt-3 text-sm ${
+                        dark ? "text-white/80" : "text-neutral-600"
+                    }`}
+                >
+                    {statusMessage}
+                </p>
+            )}
         </form>
     );
 }

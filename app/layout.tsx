@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/lib/auth-context";
+import { geistSans } from "./ui/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-    title: "Tech Lab Website",
-    description: "girls who code outreach!",
+    title: "Girls in Tech Lab",
+    description:
+        "Student-run programs helping girls in Palo Alto get started in tech.",
 };
 
 export default function RootLayout({
@@ -14,7 +16,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`antialiased`}>
+            <body className={`${geistSans.variable} antialiased`}>
                 <AuthProvider>{children}</AuthProvider>
             </body>
         </html>
