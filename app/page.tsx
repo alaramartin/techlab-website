@@ -7,8 +7,12 @@ import { serif } from "./ui/fonts";
 import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { motion } from "motion/react";
-import Subscribe from "./components/Subscribe";
-import { fetchProgram, type Project } from "@/lib/projects";
+import dynamic from "next/dynamic";
+import type { Project } from "@/lib/projects";
+
+// Lazy-load the newsletter widget so the Firebase client SDK it pulls in isn't
+// on the homepage's initial compile/render path.
+const Subscribe = dynamic(() => import("./components/Subscribe"));
 
 // The homepage spotlights a few projects from the most recent program.
 const FEATURED_PROGRAM_ID = "2026_gamelab";
@@ -76,9 +80,13 @@ export default function Page() {
     const [projects, setProjects] = useState<Project[]>([]);
 
     useEffect(() => {
-        fetchProgram(FEATURED_PROGRAM_ID).then((program) => {
-            if (program) setProjects(program.projects.slice(0, 3));
-        });
+        // Defer loading the Firebase-backed data layer until after mount so it
+        // stays out of the homepage's static import graph.
+        import("@/lib/projects").then(({ fetchProgram }) =>
+            fetchProgram(FEATURED_PROGRAM_ID).then((program) => {
+                if (program) setProjects(program.projects.slice(0, 3));
+            })
+        );
     }, []);
 
     return (
